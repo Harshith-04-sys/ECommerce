@@ -46,6 +46,8 @@ import axios from 'axios';
 // and production (deployed frontend -> backend).
 const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
+const getErrorMessage = (error) => error?.response?.data?.message || error?.message || 'Something went wrong';
+
 export const login = (email, password) => async (dispatch) => {
 
         try {
@@ -53,7 +55,7 @@ export const login = (email, password) => async (dispatch) => {
             const { data }  = await axios.post(`${API_BASE_URL}/api/v1/login`,{email,password});
             dispatch(loginSuccess(data))
         } catch (error) {
-            dispatch(loginFail(error.response.data.message))
+            dispatch(loginFail(getErrorMessage(error)))
         }
 
 }
@@ -75,7 +77,7 @@ export const register = (userData) => async (dispatch) => {
         const { data }  = await axios.post(`${API_BASE_URL}/api/v1/register`,userData, config);
         dispatch(registerSuccess(data))
     } catch (error) {
-        dispatch(registerFail(error.response.data.message))
+        dispatch(registerFail(getErrorMessage(error)))
     }
 
 }
@@ -89,7 +91,7 @@ export const loadUser =  async (dispatch) => {
         const { data }  = await axios.get(`${API_BASE_URL}/api/v1/myprofile`);
         dispatch(loadUserSuccess(data))
     } catch (error) {
-        dispatch(loadUserFail(error.response.data.message))
+        dispatch(loadUserFail(getErrorMessage(error)))
     }
 
 }
@@ -118,7 +120,7 @@ export const updateProfile = (userData) => async (dispatch) => {
         const { data }  = await axios.put(`${API_BASE_URL}/api/v1/update`,userData, config);
         dispatch(updateProfileSuccess(data))
     } catch (error) {
-        dispatch(updateProfileFail(error.response.data.message))
+        dispatch(updateProfileFail(getErrorMessage(error)))
     }
 
 }
@@ -135,7 +137,7 @@ export const updatePassword = (formData) => async (dispatch) => {
         await axios.put(`${API_BASE_URL}/api/v1/password/change`, formData, config);
         dispatch(updatePasswordSuccess())
     } catch (error) {
-        dispatch(updatePasswordFail(error.response.data.message))
+        dispatch(updatePasswordFail(getErrorMessage(error)))
     }
 
 }
@@ -152,7 +154,7 @@ export const forgotPassword = (formData) => async (dispatch) => {
         const { data} =  await axios.post(`${API_BASE_URL}/api/v1/password/forgot`, formData, config);
         dispatch(forgotPasswordSuccess(data))
     } catch (error) {
-        dispatch(forgotPasswordFail(error.response.data.message))
+        dispatch(forgotPasswordFail(getErrorMessage(error)))
     }
 
 }
@@ -169,7 +171,7 @@ export const resetPassword = (formData, token) => async (dispatch) => {
         const { data} =  await axios.post(`${API_BASE_URL}/api/v1/password/reset/${token}`, formData, config);
         dispatch(resetPasswordSuccess(data))
     } catch (error) {
-        dispatch(resetPasswordFail(error.response.data.message))
+        dispatch(resetPasswordFail(getErrorMessage(error)))
     }
 
 }
@@ -181,7 +183,7 @@ export const getUsers =  async (dispatch) => {
         const { data }  = await axios.get(`${API_BASE_URL}/api/v1/admin/users`);
         dispatch(usersSuccess(data))
     } catch (error) {
-        dispatch(usersFail(error.response.data.message))
+        dispatch(usersFail(getErrorMessage(error)))
     }
 
 }
@@ -193,7 +195,7 @@ export const getUser = id => async (dispatch) => {
         const { data }  = await axios.get(`${API_BASE_URL}/api/v1/admin/user/${id}`);
         dispatch(userSuccess(data))
     } catch (error) {
-        dispatch(userFail(error.response.data.message))
+        dispatch(userFail(getErrorMessage(error)))
     }
 
 }
@@ -205,7 +207,7 @@ export const deleteUser = id => async (dispatch) => {
         await axios.delete(`${API_BASE_URL}/api/v1/admin/user/${id}`);
         dispatch(deleteUserSuccess())
     } catch (error) {
-        dispatch(deleteUserFail(error.response.data.message))
+        dispatch(deleteUserFail(getErrorMessage(error)))
     }
 
 }
@@ -222,7 +224,7 @@ export const updateUser = (id, formData) => async (dispatch) => {
         await axios.put(`${API_BASE_URL}/api/v1/admin/user/${id}`, formData, config);
         dispatch(updateUserSuccess())
     } catch (error) {
-        dispatch(updateUserFail(error.response.data.message))
+        dispatch(updateUserFail(getErrorMessage(error)))
     }
 
 }

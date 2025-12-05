@@ -35,9 +35,9 @@ export default function Header() {
     <nav className="navbar row">
       {/* Left: Brand Logo */}
       <div className="col-12 col-md-3">
-        <div className="navbar-brand">
-          <Link to="/">
-            <img width="150px" alt="JVLcart Logo" src="/images/logo.png" />
+        <div className="navbar-brand text-white" style={{ fontFamily: 'Poppins, Inter, sans-serif', fontWeight: 700, letterSpacing: '-0.02em', fontSize: '1.6rem' }}>
+          <Link to="/" style={{ color: '#F2C94C', textDecoration: 'none', textShadow: '0 10px 30px rgba(0,0,0,0.35)' }}>
+            Shopify
           </Link>
         </div>
       </div>
