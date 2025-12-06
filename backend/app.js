@@ -6,16 +6,21 @@ const path = require('path');
 const dotenv = require('dotenv');
 const cors = require('cors'); // ✅ added this
 
-// Load environment variables
-dotenv.config({ path: path.join(__dirname, 'config/config.env') });
+// Load environment variables only in development
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: path.join(__dirname, 'config', 'config.env') });
+}
+
+// Allow credentials header for browser clients
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', true);
+  next();
+});
 
 // ✅ Enable CORS (this must come BEFORE routes)
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'https://favcart-frontend.vercel.app',
-    ],
+    origin: [process.env.FRONTEND_URL, 'http://localhost:3000'],
     credentials: true,
   })
 );

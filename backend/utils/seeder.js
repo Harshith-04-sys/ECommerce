@@ -1,12 +1,18 @@
+const path = require("path");
 const products = require("../data/products.json");
 const Product = require("../models/productModel");
 const dotenv = require("dotenv");
 const connectDatabase = require("../config/database");
 
-// Setting up config file path before other imports
-dotenv.config({ path: "backend/config/config.env" });
+// Load env only in development; Render sets env vars directly
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: path.join(__dirname, "../config", "config.env") });
+}
 
-//dotenv.config({ path: "config/config.env" });
+if (!process.env.DB_LOCAL_URI) {
+  throw new Error("DB_LOCAL_URI is missing");
+}
+
 connectDatabase();
 
 const seedProducts = async () => {

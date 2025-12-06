@@ -24,6 +24,14 @@ class APIFeatures {
         const removeFields = ['keyword', 'limit', 'page'];
         removeFields.forEach( field => delete queryStrCopy[field]);
         
+        // Handle category with case-insensitive regex
+        if (queryStrCopy.category) {
+            queryStrCopy.category = {
+                $regex: queryStrCopy.category,
+                $options: 'i'
+            };
+        }
+        
         let queryStr = JSON.stringify(queryStrCopy);
         queryStr =  queryStr.replace(/\b(gt|gte|lt|lte)/g, match => `$${match}`)
 

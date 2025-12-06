@@ -13,7 +13,7 @@ const APIFeatures = require("../utils/apiFeatures");
 // - Supports keyword search, filters (price/category/ratings) and pagination
 // - Uses APIFeatures utility to compose a Mongoose query based on req.query
 exports.getProducts = catchAsyncError(async (req, res, next) => {
-  const resPerPage = 4; // number of results per page
+  const resPerPage = 8; // match frontend pagination
 
   // buildQuery returns an APIFeatures instance with the base query and the parsed request query
   let buildQuery = () => {
@@ -30,8 +30,8 @@ exports.getProducts = catchAsyncError(async (req, res, next) => {
     productsCount = filteredProductsCount;
   }
 
-  // Apply pagination to the previously built query and execute it
-  const products = await buildQuery().paginate(resPerPage).query;
+  // Apply pagination and sort by newest first (createdAt descending)
+  const products = await buildQuery().paginate(resPerPage).query.sort({ createdAt: -1 });
 
   res.status(200).json({
     success: true,
@@ -80,10 +80,10 @@ exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
   );
 
   if (!product) {
-    return next(new ErrorHandler("Product not found", 400));
+    return next(new ErrorHandler("Product not found", 404));
   }
 
-  res.status(201).json({
+  res.status(200).json({
     success: true,
     product,
   });
