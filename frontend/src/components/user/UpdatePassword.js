@@ -1,5 +1,6 @@
 import {useEffect, useState } from 'react';
 import { updatePassword as updatePasswordAction, clearAuthError } from '../../actions/userActions';
+import { clearUpdateProfile } from '../../slices/authSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -26,13 +27,14 @@ export default function UpdatePassword() {
             })
             setOldPassword("");
             setPassword("")
+            dispatch(clearUpdateProfile())
             return;
         }
         if(error)  {
             toast(error, {
                 position: toast.POSITION.BOTTOM_CENTER,
                 type: 'error',
-                onOpen: ()=> { dispatch(clearAuthError) }
+                onOpen: ()=> { dispatch(clearAuthError()) }
             })
             return
         }

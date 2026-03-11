@@ -10,32 +10,26 @@ const cartSlice = createSlice({
         shippingInfo: localStorage.getItem('shippingInfo')? JSON.parse(localStorage.getItem('shippingInfo')): {}
     },
     reducers: {
-        addCartItemRequest(state, action){
-            return {
-                ...state,
-                loading: true
-            }
+        addCartItemRequest(state, action) {
+            state.loading = true;
         },
-        addCartItemSuccess(state, action){
-            const item = action.payload
-
-            const isItemExist = state.items.find( i => i.product == item.product);
+        addCartItemSuccess(state, action) {
+            const item = action.payload;
+            const existingItemIndex = state.items.findIndex(i => i.product === item.product);
             
-            if(isItemExist) {
-                state = {
-                    ...state,
-                    loading: false,
-                }
-            }else{
-                state = {
-                    items: [...state.items, item],
-                    loading: false
-                }
-                
-                localStorage.setItem('cartItems', JSON.stringify(state.items));
+            if (existingItemIndex >= 0) {
+                // Update quantity if item already exists
+                state.items[existingItemIndex].quantity = item.quantity;
+            } else {
+                // Add new item
+                state.items.push(item);
             }
-            return state
             
+            state.loading = false;
+            localStorage.setItem('cartItems', JSON.stringify(state.items));
+        },
+        addCartItemFail(state, action) {
+            state.loading = false;
         },
         increaseCartItemQty(state, action) {
             state.items = state.items.map(item => {
@@ -93,6 +87,7 @@ const { actions, reducer } = cartSlice;
 export const { 
     addCartItemRequest, 
     addCartItemSuccess,
+    addCartItemFail,
     decreaseCartItemQty,
     increaseCartItemQty,
     removeItemFromCart,

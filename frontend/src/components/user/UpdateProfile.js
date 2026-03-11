@@ -30,7 +30,9 @@ export default function UpdateProfile () {
         const formData = new FormData();
         formData.append('name', name)
         formData.append('email', email)
-        formData.append('avatar', avatar);
+        if (avatar) {
+            formData.append('avatar', avatar);
+        }
         dispatch(updateProfile(formData))
     }
 
@@ -56,7 +58,7 @@ export default function UpdateProfile () {
             toast(error, {
                 position: toast.POSITION.BOTTOM_CENTER,
                 type: 'error',
-                onOpen: ()=> { dispatch(clearAuthError) }
+                onOpen: ()=> { dispatch(clearAuthError()) }
             })
             return
         }

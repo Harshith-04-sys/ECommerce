@@ -1,16 +1,16 @@
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../actions/productActions";
-import Loader from ".././layouts/Loader";
+import SkeletonGrid from "../layouts/SkeletonGrid";
 import MetaData from ".././layouts/MetaData";
 import Product from ".././product/Product";
 import { toast } from "react-toastify";
-import Pagination from "react-js-pagination";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import Slider from "rc-slider";
 import Tooltip from "rc-tooltip";
 import "rc-slider/assets/index.css";
 import "rc-tooltip/assets/bootstrap.css";
+import "./ProductSearch.css";
 
 export default function ProductSearch() {
   const dispatch = useDispatch();
@@ -24,6 +24,11 @@ export default function ProductSearch() {
   const [rating, setRating] = useState(0);
 
   const { keyword } = useParams();
+  const [searchParams] = useSearchParams();
+
+  // Calculate total pages from backend response
+  const totalPages = productsCount && resPerPage ? Math.ceil(productsCount / resPerPage) : 0;
+  
   const categories = [
     "Electronics",
     "Mobile Phones",
@@ -39,9 +44,21 @@ export default function ProductSearch() {
     "Home",
   ];
 
-  const setCurrentPageNo = (pageNo) => {
+  const handlePageChange = (pageNo) => {
     setCurrentPage(pageNo);
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    // Get category from URL query params if present
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl) {
+      setCategory(categoryFromUrl);
+    } else {
+      setCategory(null);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (error) {
@@ -50,19 +67,28 @@ export default function ProductSearch() {
       });
     }
     dispatch(getProducts(keyword, priceChanged, category, rating, currentPage));
-  }, [error, dispatch, currentPage, keyword, priceChanged, category, rating]);
+  }, [error, dispatch, keyword, priceChanged, category, rating, currentPage]);
+
+  useEffect(() => {
+    // Reset to page 1 when filters change
+    setCurrentPage(1);
+  }, [keyword, priceChanged, category, rating]);
 
   return (
     <Fragment>
       {loading ? (
-        <Loader />
+        <Fragment>
+          <MetaData title={"Search Products"} />
+          <h1 id="products_heading">Search Products</h1>
+          <SkeletonGrid count={8} />
+        </Fragment>
       ) : (
         <Fragment>
           <MetaData title={"Buy Best Products"} />
           <h1 id="products_heading">Search Products</h1>
-          <section id="products" className="container mt-5">
+          <section id="products" className="container-fluid mt-5">
             <div className="row">
-              <div className="col-6 col-md-3 mb-5 mt-5">
+              <div className="col-12 col-md-3 col-lg-2 mb-5 mt-5">
                 {/* Price Filter */}
                 <div className="px-5" onMouseUp={() => setPriceChanged(price)}>
                   <Slider
@@ -138,31 +164,57 @@ export default function ProductSearch() {
                   </ul>
                 </div>
               </div>
-              <div className="col-6 col-md-9">
-                <div className="row">
-                  {products &&
-                    products.map((product) => (
-                      <Product col={4} key={product._id} product={product} />
+              <div className="col-12 col-md-9 col-lg-10">
+                {products && products.length > 0 ? (
+                  <div className="product-grid">
+                    {products.map((product) => (
+                      <Product key={product._id} product={product} />
                     ))}
-                </div>
+                  </div>
+                ) : (
+                  <div className="no-products">
+                    <p>No products found matching your criteria.</p>
+                  </div>
+                )}
+
+                {/* Custom Pagination */}
+                {productsCount > resPerPage && (
+                  <div className="pagination-container">
+                    <button
+                      className="pagination-btn"
+                      disabled={currentPage === 1}
+                      onClick={() => handlePageChange(currentPage - 1)}
+                    >
+                      Previous
+                    </button>
+                    
+                    <div className="pagination-numbers">
+                      {[...Array(totalPages)].map((_, index) => {
+                        const pageNum = index + 1;
+                        return (
+                          <button
+                            key={pageNum}
+                            className={`pagination-number ${currentPage === pageNum ? 'active' : ''}`}
+                            onClick={() => handlePageChange(pageNum)}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <button
+                      className="pagination-btn"
+                      disabled={currentPage === totalPages}
+                      onClick={() => handlePageChange(currentPage + 1)}
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </section>
-          {productsCount > 0 && productsCount > resPerPage ? (
-            <div className="d-flex justify-content-center mt-5">
-              <Pagination
-                activePage={currentPage}
-                onChange={setCurrentPageNo}
-                totalItemsCount={productsCount}
-                itemsCountPerPage={resPerPage}
-                nextPageText={"Next"}
-                firstPageText={"First"}
-                lastPageText={"Last"}
-                itemClass={"page-item"}
-                linkClass={"page-link"}
-              />
-            </div>
-          ) : null}
         </Fragment>
       )}
     </Fragment>

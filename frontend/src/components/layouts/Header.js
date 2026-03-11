@@ -52,9 +52,14 @@ export default function Header() {
         {isAuthenticated ? (
           <Dropdown className="d-inline">
             <Dropdown.Toggle
-              variant="light"
-              className="text-white pr-5"
+              variant="default"
+              className="btn-dark text-white pr-5"
               id="dropdown-basic"
+              style={{ 
+                background: 'rgba(255, 255, 255, 0.1)', 
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(10px)'
+              }}
             >
               <figure className="avatar avatar-nav">
                 <Image

@@ -22,6 +22,7 @@ export default function ForgotPassword() {
                 position: toast.POSITION.BOTTOM_CENTER
             })
             setEmail("");
+            dispatch(clearAuthError())
             return;
         }
 
@@ -29,7 +30,7 @@ export default function ForgotPassword() {
             toast(error, {
                 position: toast.POSITION.BOTTOM_CENTER,
                 type: 'error',
-                onOpen: ()=> { dispatch(clearAuthError) }
+                onOpen: ()=> { dispatch(clearAuthError()) }
             })
             return
         }

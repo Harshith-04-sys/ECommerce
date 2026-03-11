@@ -39,7 +39,9 @@ export default function Register() {
         formData.append('name', userData.name)
         formData.append('email', userData.email)
         formData.append('password', userData.password)
-        formData.append('avatar', avatar);
+        if (avatar) {
+            formData.append('avatar', avatar);
+        }
         dispatch(register(formData))
     }
 

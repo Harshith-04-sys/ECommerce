@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../actions/productActions";
-import Loader from "./layouts/Loader";
+import SkeletonGrid from "./layouts/SkeletonGrid";
 import MetaData from "./layouts/MetaData";
 import Product from "./product/Product";
 import  {toast} from 'react-toastify';
@@ -30,7 +30,13 @@ export  default function Home(){
 
     return (
         <Fragment>
-            {loading ? <Loader/>:
+            {loading ? (
+                <Fragment>
+                    <MetaData title={'Buy Best Products'} />
+                    <h1 id="products_heading">Latest Products</h1>
+                    <SkeletonGrid count={8} />
+                </Fragment>
+            ) : (
                 <Fragment>
                     <MetaData title={'Buy Best Products'} />
                     <h1 id="products_heading">Latest Products</h1>
@@ -57,7 +63,7 @@ export  default function Home(){
                            />     
                     </div> : null }
                 </Fragment>
-           }
+            )}
         </Fragment>
     )
 }

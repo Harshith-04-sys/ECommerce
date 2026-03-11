@@ -99,7 +99,7 @@ export default function ProductDetail() {
                     <Carousel.Item key={image._id}>
                       <img
                         className="d-block w-100"
-                        src={image.image}
+                        src={image.image || image.url}
                         alt={product.name}
                         height="500"
                         width="500"
@@ -148,10 +148,6 @@ export default function ProductDetail() {
                 disabled={product.stock == 0 ? true : false}
                 onClick={() => {
                   dispatch(addCartItem(product._id, quantity));
-                  toast("Cart Item Added!", {
-                    type: "success",
-                    position: toast.POSITION.BOTTOM_CENTER,
-                  });
                 }}
                 className="btn btn-primary d-inline ml-4"
               >

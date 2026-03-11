@@ -1,0 +1,159 @@
+/* SkeletonCard.css - Premium shimmer skeleton loader */
+
+/* Skeleton Card Container */
+.skeleton-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #f8f8f8 50%,
+    #f0f0f0 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+/* Image Skeleton */
+.skeleton-image {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+/* Title Skeleton */
+.skeleton-title {
+  width: 100%;
+  height: 18px;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-title-short {
+  width: 60%;
+  height: 18px;
+  margin-bottom: 1rem;
+}
+
+/* Rating Skeleton */
+.skeleton-rating {
+  width: 120px;
+  height: 14px;
+  margin-bottom: 0.75rem;
+}
+
+/* Price Skeleton */
+.skeleton-price {
+  width: 80px;
+  height: 22px;
+  margin-bottom: 0.75rem;
+}
+
+/* Button Skeleton */
+.skeleton-button {
+  width: 100%;
+  height: 38px;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+}
+
+/* Skeleton Grid */
+.skeleton-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.skeleton-grid .skeleton-card {
+  flex: 0 0 calc(25% - 1.125rem);
+  max-width: calc(25% - 1.125rem);
+}
+
+/* Responsive adjustments to match product grid */
+@media (max-width: 1200px) {
+  .skeleton-grid .skeleton-card {
+    flex: 0 0 calc(33.333% - 1rem);
+    max-width: calc(33.333% - 1rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .skeleton-grid .skeleton-card {
+    flex: 0 0 calc(50% - 0.75rem);
+    max-width: calc(50% - 0.75rem);
+  }
+}
+
+@media (max-width: 576px) {
+  .skeleton-grid .skeleton-card {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* Loading text animation */
+.skeleton-loading-text {
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+  margin: 2rem 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Fade in effect when skeletons appear */
+.skeleton-card {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Add staggered animation delay for cards */
+.skeleton-card:nth-child(1) { animation-delay: 0s; }
+.skeleton-card:nth-child(2) { animation-delay: 0.05s; }
+.skeleton-card:nth-child(3) { animation-delay: 0.1s; }
+.skeleton-card:nth-child(4) { animation-delay: 0.15s; }
+.skeleton-card:nth-child(5) { animation-delay: 0.2s; }
+.skeleton-card:nth-child(6) { animation-delay: 0.25s; }
+.skeleton-card:nth-child(7) { animation-delay: 0.3s; }
+.skeleton-card:nth-child(8) { animation-delay: 0.35s; }
+.skeleton-card:nth-child(9) { animation-delay: 0.4s; }
+.skeleton-card:nth-child(10) { animation-delay: 0.45s; }
+.skeleton-card:nth-child(11) { animation-delay: 0.5s; }
+.skeleton-card:nth-child(12) { animation-delay: 0.55s; }

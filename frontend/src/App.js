@@ -4,7 +4,8 @@
 //  - Dispatch initial actions (load authenticated user)
 //  - Define client-side routes and protect admin/user routes
 import './App.css';
-import Home from './components/Home';
+import OldHome from './components/Home';
+import NewHome from './components/home/Home';
 import Landing from './components/Landing';
 import Footer from './components/layouts/Footer';
 import Header from './components/layouts/Header';
@@ -50,7 +51,7 @@ function App() {
   const [stripeApiKey, setStripeApiKey] = useState("")
   useEffect(() => {
     // Dispatch user loader to check for existing authenticated user (JWT in cookie)
-    store.dispatch(loadUser)
+    store.dispatch(loadUser())
 
     // Fetch Stripe API key from backend (keeps secret keys server-side)
     async function getStripeApiKey(){
@@ -65,42 +66,44 @@ function App() {
       <div className="App">
         <HelmetProvider>
             <Header/>
-                <div className='container container-fluid'>
-                  <ToastContainer theme='dark' />
-                    <Routes>
-                      <Route path='/' element={<Landing/>} />
-                      <Route path='/shop' element={<Home/>} />
-                      {/* Product search route uses `keyword` param — ProductSearch reads it and dispatches getProducts */}
-                      <Route path='/search/:keyword' element={<ProductSearch/>} />
-                      <Route path='/product/:id' element={<ProductDetail/>} />
-                      <Route path='/login' element={<Login/>} />
-                      <Route path='/register' element={<Register/>} />
-                      <Route path='/myprofile' element={<ProtectedRoute><Profile/></ProtectedRoute> } />
-                      <Route path='/myprofile/update' element={<ProtectedRoute><UpdateProfile/></ProtectedRoute> } />
-                      <Route path='/myprofile/update/password' element={<ProtectedRoute><UpdatePassword/></ProtectedRoute> } />
-                      <Route path='/password/forgot' element={<ForgotPassword/> } />
-                      <Route path='/password/reset/:token' element={<ResetPassword/> } />
-                      <Route path='/cart' element={<Cart/> } />
-                      <Route path='/shipping' element={<ProtectedRoute><Shipping/></ProtectedRoute> } />
-                      <Route path='/order/confirm' element={<ProtectedRoute><ConfirmOrder/></ProtectedRoute> } />
-                      <Route path='/order/success' element={<ProtectedRoute><OrderSuccess/></ProtectedRoute> } />
-                      <Route path='/orders' element={<ProtectedRoute><UserOrders/></ProtectedRoute> } />
-                      <Route path='/order/:id' element={<ProtectedRoute><OrderDetail/></ProtectedRoute> } />
-                      {/* Only enable payment route if Stripe key has been loaded */}
-                      {stripeApiKey && (
-                        <Route
-                          path='/payment'
-                          element={
-                            <ProtectedRoute>
-                              <Elements stripe={loadStripe(stripeApiKey)}>
-                                <Payment />
-                              </Elements>
-                            </ProtectedRoute>
-                          }
-                        />
-                      )}
-                  </Routes>
-                </div>
+                <ToastContainer theme='dark' />
+                <Routes>
+                  <Route path='/' element={<NewHome/>} />
+                  <Route path='/landing' element={<Landing/>} />
+                  <Route path='/shop' element={<div className='container container-fluid'><OldHome/></div>} />
+                  {/* Product search routes - with and without keyword */}
+                  <Route path='/search' element={<div className='container container-fluid'><ProductSearch/></div>} />
+                  <Route path='/search/:keyword' element={<div className='container container-fluid'><ProductSearch/></div>} />
+                  <Route path='/product/:id' element={<div className='container container-fluid'><ProductDetail/></div>} />
+                  <Route path='/login' element={<div className='container container-fluid'><Login/></div>} />
+                  <Route path='/register' element={<div className='container container-fluid'><Register/></div>} />
+                  <Route path='/myprofile' element={<div className='container container-fluid'><ProtectedRoute><Profile/></ProtectedRoute></div>} />
+                  <Route path='/myprofile/update' element={<div className='container container-fluid'><ProtectedRoute><UpdateProfile/></ProtectedRoute></div>} />
+                  <Route path='/myprofile/update/password' element={<div className='container container-fluid'><ProtectedRoute><UpdatePassword/></ProtectedRoute></div>} />
+                  <Route path='/password/forgot' element={<div className='container container-fluid'><ForgotPassword/></div>} />
+                  <Route path='/password/reset/:token' element={<div className='container container-fluid'><ResetPassword/></div>} />
+                  <Route path='/cart' element={<div className='container container-fluid'><Cart/></div>} />
+                  <Route path='/shipping' element={<div className='container container-fluid'><ProtectedRoute><Shipping/></ProtectedRoute></div>} />
+                  <Route path='/order/confirm' element={<div className='container container-fluid'><ProtectedRoute><ConfirmOrder/></ProtectedRoute></div>} />
+                  <Route path='/order/success' element={<div className='container container-fluid'><ProtectedRoute><OrderSuccess/></ProtectedRoute></div>} />
+                  <Route path='/orders' element={<div className='container container-fluid'><ProtectedRoute><UserOrders/></ProtectedRoute></div>} />
+                  <Route path='/order/:id' element={<div className='container container-fluid'><ProtectedRoute><OrderDetail/></ProtectedRoute></div>} />
+                  {/* Only enable payment route if Stripe key has been loaded */}
+                  {stripeApiKey && (
+                    <Route
+                      path='/payment'
+                      element={
+                        <div className='container container-fluid'>
+                          <ProtectedRoute>
+                            <Elements stripe={loadStripe(stripeApiKey)}>
+                              <Payment />
+                            </Elements>
+                          </ProtectedRoute>
+                        </div>
+                      }
+                    />
+                  )}
+              </Routes>
                 {/* Admin Routes */}
                 <Routes>
                   <Route path='/admin/dashboard' element={ <ProtectedRoute isAdmin={true}><Dashboard/></ProtectedRoute> } />

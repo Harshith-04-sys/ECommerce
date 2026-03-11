@@ -17,7 +17,12 @@ export default function Landing() {
           <Link className="cta_button" to="/shop">
             Enter Store
           </Link>
-          <a className="cta_link" href="#landing-highlights">
+          <a
+            className="cta_link"
+            href="https://www.shopify.com/in"
+            target="_blank"
+            rel="noreferrer"
+          >
             See highlights
           </a>
         </div>
@@ -29,16 +34,6 @@ export default function Landing() {
           <strong>Soft depth</strong>
           <small>Hover to feel the lift</small>
         </div>
-        <div className="orbital__card floating delay">
-          <span className="pill pill-gold">Glass UI</span>
-          <strong>Frosted nav</strong>
-          <small>Gentle blur + glow</small>
-        </div>
-        <div className="orbital__card floating slow">
-          <span className="pill pill-emerald">Motion</span>
-          <strong>Parallax hero</strong>
-          <small>Perspective & tilt</small>
-        </div>
       </div>
 
       <div id="landing-highlights" className="landing__highlights">
@@ -48,7 +43,7 @@ export default function Landing() {
         </article>
         <article>
           <h3>Curated products</h3>
-          <p>Backed by MongoDB Atlas for smooth discovery.</p>
+          <p>Backed by SQL for smooth discovery.</p>
         </article>
         <article>
           <h3>Secure accounts</h3>

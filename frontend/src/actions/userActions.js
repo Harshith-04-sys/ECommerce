@@ -42,145 +42,186 @@ import {
 } from '../slices/userSlice'
 import axios from 'axios';
 
+// Always include cookies for auth flows
+axios.defaults.withCredentials = true;
+
 // Use the same API base URL everywhere so auth works in both dev (localhost:3000 -> 8000)
 // and production (deployed frontend -> backend).
 const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
 const getErrorMessage = (error) => error?.response?.data?.message || error?.message || 'Something went wrong';
 
+/**
+ * Login User
+ */
 export const login = (email, password) => async (dispatch) => {
-
-        try {
-            dispatch(loginRequest())
-            const { data }  = await axios.post(`${API_BASE_URL}/api/v1/login`,{email,password});
-            dispatch(loginSuccess(data))
-        } catch (error) {
-            dispatch(loginFail(getErrorMessage(error)))
-        }
-
-}
+    try {
+        dispatch(loginRequest());
+        
+        const { data } = await axios.post(
+            `${API_BASE_URL}/api/v1/login`,
+            { email, password },
+            { withCredentials: true }
+        );
+        
+        dispatch(loginSuccess(data));
+    } catch (error) {
+        dispatch(loginFail(getErrorMessage(error)));
+    }
+};
 
 export const clearAuthError = () => (dispatch) => {
     dispatch(clearError())
 }
 
+/**
+ * Register New User
+ */
 export const register = (userData) => async (dispatch) => {
-
     try {
-        dispatch(registerRequest())
+        dispatch(registerRequest());
+        
         const config = {
             headers: {
-                'Content-type': 'multipart/form-data'
-            }
-        }
-
-        const { data }  = await axios.post(`${API_BASE_URL}/api/v1/register`,userData, config);
-        dispatch(registerSuccess(data))
+                'Content-Type': 'multipart/form-data'
+            },
+            withCredentials: true
+        };
+        
+        const { data } = await axios.post(
+            `${API_BASE_URL}/api/v1/register`,
+            userData,
+            config
+        );
+        
+        dispatch(registerSuccess(data));
     } catch (error) {
-        dispatch(registerFail(getErrorMessage(error)))
+        dispatch(registerFail(getErrorMessage(error)));
     }
+};
 
-}
-
-export const loadUser =  async (dispatch) => {
-
+/**
+ * Load User Profile
+ */
+export const loadUser = () => async (dispatch) => {
     try {
-        dispatch(loadUserRequest())
-       
-
-        const { data }  = await axios.get(`${API_BASE_URL}/api/v1/myprofile`);
-        dispatch(loadUserSuccess(data))
+        dispatch(loadUserRequest());
+        
+        const { data } = await axios.get(
+            `${API_BASE_URL}/api/v1/me`,
+            { withCredentials: true }
+        );
+        
+        dispatch(loadUserSuccess(data));
     } catch (error) {
-        dispatch(loadUserFail(getErrorMessage(error)))
+        dispatch(loadUserFail(getErrorMessage(error)));
     }
+};
 
-}
-
-export const logout =  async (dispatch) => {
-
+/**
+ * Logout User
+ */
+export const logout = () => async (dispatch) => {
     try {
-        await axios.get(`${API_BASE_URL}/api/v1/logout`);
-        dispatch(logoutSuccess())
+        await axios.get(
+            `${API_BASE_URL}/api/v1/logout`,
+            { withCredentials: true }
+        );
+        
+        dispatch(logoutSuccess());
     } catch (error) {
-        dispatch(logoutFail(error.response?.data?.message || error.message))
+        dispatch(logoutFail(getErrorMessage(error)));
     }
+};
 
-}
-
+/**
+ * Update User Profile
+ */
 export const updateProfile = (userData) => async (dispatch) => {
-
     try {
-        dispatch(updateProfileRequest())
+        dispatch(updateProfileRequest());
+        
         const config = {
             headers: {
-                'Content-type': 'multipart/form-data'
-            }
-        }
-
-        const { data }  = await axios.put(`${API_BASE_URL}/api/v1/update`,userData, config);
-        dispatch(updateProfileSuccess(data))
+                'Content-Type': 'multipart/form-data'
+            },
+            withCredentials: true
+        };
+        
+        const { data } = await axios.put(
+            `${API_BASE_URL}/api/v1/profile/update`,
+            userData,
+            config
+        );
+        
+        dispatch(updateProfileSuccess(data));
     } catch (error) {
-        dispatch(updateProfileFail(getErrorMessage(error)))
+        dispatch(updateProfileFail(getErrorMessage(error)));
     }
+};
 
-}
-
-export const updatePassword = (formData) => async (dispatch) => {
-
+/**
+ * Update User Password
+ */
+export const updatePassword = (passwords) => async (dispatch) => {
     try {
-        dispatch(updatePasswordRequest())
-        const config = {
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }
-        await axios.put(`${API_BASE_URL}/api/v1/password/change`, formData, config);
-        dispatch(updatePasswordSuccess())
+        dispatch(updatePasswordRequest());
+        
+        const { data } = await axios.put(
+            `${API_BASE_URL}/api/v1/password/change`,
+            passwords,
+            { withCredentials: true }
+        );
+        
+        dispatch(updatePasswordSuccess(data));
     } catch (error) {
-        dispatch(updatePasswordFail(getErrorMessage(error)))
+        dispatch(updatePasswordFail(getErrorMessage(error)));
     }
+};
 
-}
-
-export const forgotPassword = (formData) => async (dispatch) => {
-
+/**
+ * Forgot Password - Send Reset Email
+ */
+export const forgotPassword = (email) => async (dispatch) => {
     try {
-        dispatch(forgotPasswordRequest())
-        const config = {
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }
-        const { data} =  await axios.post(`${API_BASE_URL}/api/v1/password/forgot`, formData, config);
-        dispatch(forgotPasswordSuccess(data))
+        dispatch(forgotPasswordRequest());
+        
+        const { data } = await axios.post(
+            `${API_BASE_URL}/api/v1/password/forgot`,
+            { email },
+            { withCredentials: true }
+        );
+        
+        dispatch(forgotPasswordSuccess(data));
     } catch (error) {
-        dispatch(forgotPasswordFail(getErrorMessage(error)))
+        dispatch(forgotPasswordFail(getErrorMessage(error)));
     }
+};
 
-}
-
-export const resetPassword = (formData, token) => async (dispatch) => {
-
+/**
+ * Reset Password
+ */
+export const resetPassword = (token, passwords) => async (dispatch) => {
     try {
-        dispatch(resetPasswordRequest())
-        const config = {
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }
-        const { data} =  await axios.post(`${API_BASE_URL}/api/v1/password/reset/${token}`, formData, config);
-        dispatch(resetPasswordSuccess(data))
+        dispatch(resetPasswordRequest());
+        
+        const { data } = await axios.post(
+            `${API_BASE_URL}/api/v1/password/reset/${token}`,
+            passwords,
+            { withCredentials: true }
+        );
+        
+        dispatch(resetPasswordSuccess(data));
     } catch (error) {
-        dispatch(resetPasswordFail(getErrorMessage(error)))
+        dispatch(resetPasswordFail(getErrorMessage(error)));
     }
+};
 
-}
-
-export const getUsers =  async (dispatch) => {
+export const getUsers =  () => async (dispatch) => {
 
     try {
         dispatch(usersRequest())
-        const { data }  = await axios.get(`${API_BASE_URL}/api/v1/admin/users`);
+        const { data }  = await axios.get(`${API_BASE_URL}/api/v1/admin/users`, { withCredentials: true });
         dispatch(usersSuccess(data))
     } catch (error) {
         dispatch(usersFail(getErrorMessage(error)))
@@ -192,7 +233,7 @@ export const getUser = id => async (dispatch) => {
 
     try {
         dispatch(userRequest())
-        const { data }  = await axios.get(`${API_BASE_URL}/api/v1/admin/user/${id}`);
+        const { data }  = await axios.get(`${API_BASE_URL}/api/v1/admin/user/${id}`, { withCredentials: true });
         dispatch(userSuccess(data))
     } catch (error) {
         dispatch(userFail(getErrorMessage(error)))
@@ -204,7 +245,7 @@ export const deleteUser = id => async (dispatch) => {
 
     try {
         dispatch(deleteUserRequest())
-        await axios.delete(`${API_BASE_URL}/api/v1/admin/user/${id}`);
+        await axios.delete(`${API_BASE_URL}/api/v1/admin/user/${id}`, { withCredentials: true });
         dispatch(deleteUserSuccess())
     } catch (error) {
         dispatch(deleteUserFail(getErrorMessage(error)))
@@ -221,7 +262,7 @@ export const updateUser = (id, formData) => async (dispatch) => {
                 'Content-type': 'application/json'
             }
         }
-        await axios.put(`${API_BASE_URL}/api/v1/admin/user/${id}`, formData, config);
+        await axios.put(`${API_BASE_URL}/api/v1/admin/user/${id}`, formData, { ...config, withCredentials: true });
         dispatch(updateUserSuccess())
     } catch (error) {
         dispatch(updateUserFail(getErrorMessage(error)))
