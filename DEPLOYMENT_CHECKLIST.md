@@ -95,8 +95,6 @@ Changed from `nodemon` to `node` for production
 ```
 NODE_ENV=production
 PORT=8000
-DB_LOCAL_URI=mongodb+srv://hemanthsankarreddy_db_user:123hemanth@cluster0.yjrazgq.mongodb.net/favcart?retryWrites=true&w=majority&appName=Cluster0
-JWT_SECRET=F66DB4EC116F3
 JWT_EXPIRES_TIME=7d
 COOKIE_EXPIRES_TIME=7
 BACKEND_URL=https://YOUR-RENDER-APP.onrender.com
