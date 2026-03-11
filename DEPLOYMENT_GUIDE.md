@@ -34,9 +34,7 @@ Your backend is ready! Just need to configure environment variables on Render.
 5. **Add Environment Variables** (click "Advanced" → "Add Environment Variable"):
 
 ```
-NODE_ENV=production
-PORT=8000
-DB_LOCAL_URI=mongodb+srv://hemanthsankarreddy_db_user:123hemanth@cluster0.yjrazgq.mongodb.net/favcart?retryWrites=true&w=majority&appName=Cluster0
+NODE_ENV=productio
 JWT_SECRET=F66DB4EC116F3
 JWT_EXPIRES_TIME=7d
 COOKIE_EXPIRES_TIME=7
